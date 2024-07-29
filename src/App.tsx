@@ -1,26 +1,23 @@
 import { useState } from 'react';
-import axios from 'axios';
 import { Biome, Map, MapConfig } from './types/map-config.type';
+import { fetchMapDatas } from './lib/common';
 
 const MapGenerator = () => {
   const [map, setMap] = useState<Map>([]);
   const [config, setConfig] = useState<MapConfig>({
-    availableBiome: ['plain', 'desert', 'forest', 'ocean'],
+    availableBiome: ['plain', 'forest', 'desert', 'ocean'],
     baseBiome: 'ocean',
-    numberOfBiomes: 10,
-    width: 10,
-    height: 10,
+    numberOfBiomes: 500,
+    width: 30,
+    height: 30,
   });
 
   const generateMap = async () => {
     try {
-      const response = await axios.post(
-        'http://localhost:3000/map/generate',
-        config
-      );
-      setMap(response.data);
-    } catch (error) {
-      console.error('Erreur lors de la génération de la carte', error);
+      const result = await fetchMapDatas(config);
+      setMap(result);
+    } catch (error: any) {
+      throw new Error(error.message);
     }
   };
 
@@ -35,7 +32,7 @@ const MapGenerator = () => {
       case 'ocean':
         return '#0D99FF';
       default:
-        return 'white';
+        return '#fff';
     }
   };
 
@@ -51,8 +48,8 @@ const MapGenerator = () => {
                   key={cellIndex}
                   style={{
                     display: 'inline-block',
-                    width: '40px',
-                    height: '40px',
+                    width: '20px',
+                    height: '20px',
                     backgroundColor: getBiomeColor(cell),
                   }}
                 ></span>
