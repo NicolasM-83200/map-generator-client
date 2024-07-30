@@ -1,15 +1,16 @@
 import { useState } from 'react';
-import { Biome, Map, MapConfig } from './types/map-config.type';
+import { Map, MapConfig } from './types/map-config.type';
 import { fetchMapDatas } from './lib/common';
+import { getBiomeColor, getBiomeImage } from './utils/biomeTexture';
 
 const MapGenerator = () => {
   const [map, setMap] = useState<Map>([]);
   const [config, setConfig] = useState<MapConfig>({
     availableBiome: ['plain', 'forest', 'desert', 'ocean'],
     baseBiome: 'ocean',
-    numberOfBiomes: 500,
-    width: 30,
-    height: 30,
+    numberOfBiomes: 5,
+    width: 10,
+    height: 10,
   });
 
   const generateMap = async () => {
@@ -21,42 +22,27 @@ const MapGenerator = () => {
     }
   };
 
-  const getBiomeColor = (biome: Biome): string => {
-    switch (biome) {
-      case 'plain':
-        return '#AFF4C6';
-      case 'desert':
-        return '#FFCD29';
-      case 'forest':
-        return '#14AE5C';
-      case 'ocean':
-        return '#0D99FF';
-      default:
-        return '#fff';
-    }
-  };
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       <button onClick={generateMap}>Générer la carte</button>
       <div>
-        <div>
-          {map.map((row, rowIndex) => (
-            <div key={rowIndex} style={{ display: 'flex' }}>
-              {row.map((cell, cellIndex) => (
-                <span
-                  key={cellIndex}
-                  style={{
-                    display: 'inline-block',
-                    width: '20px',
-                    height: '20px',
-                    backgroundColor: getBiomeColor(cell),
-                  }}
-                ></span>
-              ))}
-            </div>
-          ))}
-        </div>
+        {map.map((row, rowIndex) => (
+          <div key={rowIndex} style={{ display: 'flex' }}>
+            {row.map((cell, cellIndex) => (
+              <span
+                key={cellIndex}
+                style={{
+                  display: 'inline-block',
+                  width: '40px',
+                  height: '40px',
+                  backgroundColor: getBiomeColor(cell),
+                  backgroundImage: getBiomeImage(cell),
+                  backgroundSize: 'cover',
+                }}
+              ></span>
+            ))}
+          </div>
+        ))}
       </div>
     </div>
   );
