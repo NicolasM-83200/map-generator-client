@@ -4,7 +4,7 @@ import { MapConfig } from '../types/map-config.type';
 export const fetchMapDatas = async (config: MapConfig) => {
   try {
     const response = await axios.post(
-      'http://localhost:3000/map/generate',
+      'https://map-generator-api.fly.dev/map/generate',
       config
     );
     return response.data;
